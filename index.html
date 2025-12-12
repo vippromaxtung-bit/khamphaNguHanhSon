@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-key="title_page">Ngũ Hành Sơn – Nơi gìn giữ những nét đẹp văn hoá</title>
+    <!-- Tải Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Cấu hình Font và Màu sắc (Tông đất, đá, xanh lá) -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        
+        /* Cấu hình Tailwind cho font Inter */
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff; /* Màu trắng tinh khiết */
+            color: #333;
+        }
+
+        /* Hiệu ứng Parallax cho Hero Section */
+        #hero-section {
+            /* Ảnh placeholder đẹp hơn - Bạn nên thay bằng ảnh Ngũ Hành Sơn thật */
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Ngu_hanh_son_toan_canh.jpg/1280px-Ngu_hanh_son_toan_canh.jpg'); 
+            background-attachment: fixed; /* Hiệu ứng Parallax */
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            height: 85vh; /* Chiều cao lớn cho banner */
+            position: relative;
+        }
+        
+        .nav-link:hover {
+            color: #166534; /* Màu xanh đậm khi hover */
+        }
+
+        /* Màu sắc tông thiên nhiên */
+        .color-primary { color: #22c55e; } /* Xanh lá tươi */
+        .bg-stone { background-color: #d6d3d1; } /* Xám đá */
+        .text-stone-dark { color: #44403c; } /* Đất đậm */
+        
+        /* Loading spinner */
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #22c55e;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Nút chọn ngôn ngữ */
+        .lang-button {
+            transition: all 0.2s;
+        }
+        .lang-button.active {
+            background-color: #16a34a; /* Màu xanh lá đậm */
+            color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+    </style>
+</head>
+<script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+<df-messenger
+  intent="WELCOME"
+  chat-title="CHATBOT_NHS"
+  agent-id="c9c31154-1738-44aa-85bb-c712b9583b67"
+  language-code="vi"
+></df-messenger>
+<body>
+
+    <!-- Thanh Điều Hướng (Navigation Bar) - Sticky Header -->
+    <nav id="navbar" class="fixed top-0 left-0 w-full z-50 bg-white/95 shadow-md transition duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo/Tên Website -->
+                <div class="flex-shrink-0">
+                    <a href="#home" class="text-xl font-extrabold text-green-700">NGŨ HÀNH SƠN</a>
+                </div>
+                
+                <!-- Menu Điều Hướng (Desktop) -->
+                <div class="hidden md:flex items-center space-x-4">
+                    <div class="flex items-baseline space-x-4">
+                        <a href="#home" class="nav-link text-stone-dark font-medium px-3 py-2 rounded-md hover:bg-green-50" data-key="nav_home">Trang Chủ</a>
+                        <a href="#about" class="nav-link text-stone-dark font-medium px-3 py-2 rounded-md hover:bg-green-50" data-key="nav_about">Giới Thiệu</a>
+                        <a href="#attractions" class="nav-link text-stone-dark font-medium px-3 py-2 rounded-md hover:bg-green-50" data-key="nav_attractions">Danh Lam</a>
+                        <a href="#history" class="nav-link text-stone-dark font-medium px-3 py-2 rounded-md hover:bg-green-50" data-key="nav_history">Di Tích Lịch Sử</a>
+                        <a href="#gallery" class="nav-link text-stone-dark font-medium px-3 py-2 rounded-md hover:bg-green-50" data-key="nav_gallery">Thư Viện Ảnh</a>
+                        <a href="#guide" class="nav-link text-stone-dark font-medium px-3 py-2 rounded-md hover:bg-green-50" data-key="nav_guide">Hướng Dẫn</a>
+                    </div>
+                    
+                    <!-- Thanh chọn Ngôn ngữ (Desktop) -->
+                    <div class="ml-6 flex items-center bg-gray-100 rounded-full p-1 shadow-inner">
+                        <button class="lang-button px-3 py-1 text-sm font-semibold rounded-full active" onclick="setLanguage('vi')" id="lang-vi">VI</button>
+                        <button class="lang-button px-3 py-1 text-sm font-semibold rounded-full" onclick="setLanguage('en')" id="lang-en">EN</button>
+                    </div>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                     <!-- Thanh chọn Ngôn ngữ (Mobile) -->
+                    <div class="flex items-center bg-gray-100 rounded-full p-1 mr-3 shadow-inner">
+                        <button class="lang-button px-3 py-1 text-sm font-semibold rounded-full active" onclick="setLanguage('vi')" id="lang-vi-mobile">VI</button>
+                        <button class="lang-button px-3 py-1 text-sm font-semibold rounded-full" onclick="setLanguage('en')" id="lang-en-mobile">EN</button>
+                    </div>
+                    <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-stone-dark hover:text-green-700 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-green-500">
+                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu (Ẩn/Hiện) -->
+        <div class="md:hidden hidden" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#home" class="mobile-nav-link block text-stone-dark font-medium px-3 py-2 rounded-md hover:bg-green-100" data-key="nav_home">Trang Chủ</a>
+                <a href="#about" class="mobile-nav-link block text-stone-dark font-medium px-3 py-2 rounded-md hover:bg-green-100" data-key="nav_about">Giới Thiệu</a>
+                <a href="#attractions" class="mobile-nav-link block text-stone-dark font-medium px-3 py-2 rounded-md hover:bg-green-100" data-key="nav_attractions">Danh Lam</a>
+                <a href="#history" class="mobile-nav-link block text-stone-dark font-medium px-3 py-2 rounded-md hover:bg-green-100" data-key="nav_history">Di Tích Lịch Sử</a>
+                <a href="#gallery" class="mobile-nav-link block text-stone-dark font-medium px-3 py-2 rounded-md hover:bg-green-100" data-key="nav_gallery">Thư Viện Ảnh</a>
+                <a href="#guide" class="mobile-nav-link block text-stone-dark font-medium px-3 py-2 rounded-md hover:bg-green-100" data-key="nav_guide">Hướng Dẫn</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="mt-16">
+        <!-- 1. Trang Chủ (Home) - Hero Banner với Parallax -->
+        <section id="home" class="relative" aria-label="Trang Chủ Ngũ Hành Sơn">
+            <div id="hero-section" class="flex items-center justify-center text-center">
+                <div class="bg-black/40 p-8 md:p-12 rounded-xl backdrop-blur-sm mx-4 max-w-4xl shadow-2xl">
+                    <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold text-white mb-4 tracking-tighter" data-key="hero_h1">
+                        Ngũ Hành Sơn
+                    </h1>
+                    <h2 class="text-xl sm:text-2xl lg:text-3xl font-semibold text-amber-100 mb-6" data-key="hero_h2">
+                        Nơi gìn giữ những nét đẹp văn hoá
+                    </h2>
+                    <p class="text-lg text-white font-light max-w-2xl mx-auto" data-key="hero_p">
+                        Chào mừng bạn đến với phường Ngũ Hành Sơn – vùng đất hội tụ vẻ đẹp thiên nhiên kỳ thú cùng những giá trị lịch sử – văn hoá đặc sắc. Du khách có thể khám phá núi đá vôi, chùa chiền linh thiêng, hang động cổ xưa và nhiều địa chỉ đỏ gắn liền với lịch sử dân tộc.
+                    </p>
+                    <a href="#attractions" class="mt-8 inline-block bg-green-700 hover:bg-green-800 text-white font-bold py-3 px-8 rounded-full transition duration-300 shadow-lg transform hover:scale-105" data-key="hero_button">
+                        Khám Phá Ngay
+                    </a>
+                </div>
+            </div>
+
+            <!-- Điểm Nhấn Chính -->
+            <div class="absolute -bottom-16 left-0 right-0 z-10 hidden lg:block">
+                <div class="max-w-7xl mx-auto px-4">
+                    <div class="bg-white rounded-xl shadow-xl p-6 grid grid-cols-5 gap-4">
+                        <div class="text-center p-3">
+                            <span class="text-4xl color-primary">🏞</span>
+                            <p class="mt-2 text-sm text-stone-dark font-semibold" data-key="highlight_1">Quần thể Danh thắng</p>
+                        </div>
+                        <div class="text-center p-3">
+                            <span class="text-4xl color-primary">🛕</span>
+                            <p class="mt-2 text-sm text-stone-dark font-semibold" data-key="highlight_2">Chùa, Đền, Động</p>
+                        </div>
+                        <div class="text-center p-3">
+                            <span class="text-4xl color-primary">🏛</span>
+                            <p class="mt-2 text-sm text-stone-dark font-semibold" data-key="highlight_3">Di Tích Lịch Sử</p>
+                        </div>
+                        <div class="text-center p-3">
+                            <span class="text-4xl color-primary">📸</span>
+                            <p class="mt-2 text-sm text-stone-dark font-semibold" data-key="highlight_4">Thư Viện Ảnh</p>
+                        </div>
+                        <div class="text-center p-3">
+                            <span class="text-4xl color-primary">📍</span>
+                            <p class="mt-2 text-sm text-stone-dark font-semibold" data-key="highlight_5">Bản Đồ Du Lịch</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Container chung cho các section sau -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 mt-16 lg:mt-32">
+
+            <!-- 2. Giới thiệu chung (About) -->
+            <section id="about" class="mb-20 pt-10" aria-label="Giới Thiệu Chung">
+                <h3 class="text-base font-semibold text-green-600 uppercase tracking-wider mb-2" data-key="about_sub">Giới Thiệu Chung</h3>
+                <h2 class="text-4xl font-extrabold text-stone-dark mb-10 border-b-2 border-green-500 pb-3 inline-block" data-key="about_h2">Vùng Đất Ngũ Hành Sơn</h2>
+                
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <p class="text-xl font-medium text-gray-600 mb-6 leading-relaxed" data-key="about_p1">
+                            Ngũ Hành Sơn, tọa lạc tại phường Ngũ Hành Sơn, bên bờ biển Đà Nẵng, là một tuyệt tác thiên nhiên bao gồm quần thể 5 ngọn núi đá vôi được đặt tên theo thuyết Ngũ Hành: <span class="text-green-700 font-bold">Kim – Mộc – Thủy – Hỏa – Thổ</span>.
+                        </p>
+                        
+                        <div class="space-y-6">
+                            <!-- Giá trị Tự nhiên -->
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0">
+                                    <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-9-8l2.5-4h11l2.5 4M12 18v-4M7 14h10M6 14h12l-1 4H7l-1-4z" /></svg>
+                                </div>
+                                <div class="ml-4">
+                                    <h4 class="text-lg font-semibold text-stone-dark" data-key="about_feat1_h">Giá Trị Tự Nhiên</h4>
+                                    <p class="mt-1 text-gray-500" data-key="about_feat1_p">Quần thể núi đá, hang động, rừng cây và bãi biển tạo nên hệ sinh thái đa dạng, không khí trong lành.</p>
+                                </div>
+                            </div>
+                            <!-- Giá trị Văn hoá – Tâm linh -->
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0">
+                                    <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.5v15M12 4.5l6 6M12 4.5L6 10.5M12 19.5l-6-6M12 19.5l6-6" /></svg>
+                                </div>
+                                <div class="ml-4">
+                                    <h4 class="text-lg font-semibold text-stone-dark" data-key="about_feat2_h">Văn Hóa – Tâm Linh</h4>
+                                    <p class="mt-1 text-gray-500" data-key="about_feat2_p">Nơi lưu giữ các ngôi chùa, động từ thế kỷ XVII, là trung tâm Phật giáo linh thiêng của khu vực.</p>
+                                </div>
+                            </div>
+                            <!-- Giá trị Lịch sử -->
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0">
+                                    <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                </div>
+                                <div class="ml-4">
+                                    <h4 class="text-lg font-semibold text-stone-dark" data-key="about_feat3_h">Giá Trị Lịch Sử</h4>
+                                    <p class="mt-1 text-gray-500" data-key="about_feat3_p">Là "Địa chỉ đỏ" quan trọng, gắn liền với các di tích và căn cứ kháng chiến trong thời kỳ chống Mỹ.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Ảnh Minh Họa -->
+                    <div class="rounded-xl overflow-hidden shadow-2xl">
+                        <img src="image.jpg" alt="Quần thể 5 ngọn núi Ngũ Hành Sơn" class="w-full h-auto object-cover transition duration-500 hover:scale-105">
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. Danh lam thắng cảnh (Attractions) -->
+            <section id="attractions" class="mb-20 pt-10" aria-label="Danh Lam Thắng Cảnh">
+                <h3 class="text-base font-semibold text-green-600 uppercase tracking-wider mb-2" data-key="attractions_sub">Du Khách Thường Ghé Thăm</h3>
+                <h2 class="text-4xl font-extrabold text-stone-dark mb-12 border-b-2 border-green-500 pb-3 inline-block" data-key="attractions_h2">Danh Lam Thắng Cảnh Nổi Bật</h2>
+
+                <!-- Layout Card cho các địa danh -->
+                <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    
+                    <!-- Card: Núi Thủy Sơn (Tiêu điểm) -->
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden transition duration-300 hover:shadow-xl hover:-translate-y-1 border border-stone-200">
+                        <img src="ngon-thuy-son-1_1634097765_1634359820.jpg" alt="Núi Thủy Sơn" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h4 class="text-2xl font-bold text-green-800 mb-3" data-key="att_ts_h">Núi Thủy Sơn</h4>
+                            <p class="text-gray-600 mb-4" data-key="att_ts_p">Ngọn núi lớn và đẹp nhất, nơi tập trung hầu hết các công trình kiến trúc Phật giáo và hang động huyền bí.</p>
+                            <ul class="list-disc list-inside text-sm text-gray-500 space-y-1 pl-4">
+                                <li data-key="att_ts_li1">Chùa Tam Thai cổ kính</li>
+                                <li data-key="att_ts_li2">Chùa Linh Ứng (Ngũ Hành Sơn)</li>
+                                <li data-key="att_ts_li3">Động Huyền Không kỳ vĩ</li>
+                                <li data-key="att_ts_li4">Vọng Giang Đài – Vọng Hải Đài</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Card: Động Huyền Không -->
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden transition duration-300 hover:shadow-xl hover:-translate-y-1 border border-stone-200">
+                        <img src="Zt6Zx9qX-dong-huyen-khong-1.jpg" alt="Động Huyền Không" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h4 class="text-2xl font-bold text-green-800 mb-3" data-key="att_hk_h">Động Huyền Không</h4>
+                            <p class="text-gray-600 mb-4" data-key="att_hk_p">Một hang động lớn, mở ra giếng trời tự nhiên, tạo nên luồng ánh sáng độc đáo, là điểm check-in nổi tiếng.</p>
+                            <ul class="list-disc list-inside text-sm text-gray-500 space-y-1 pl-4">
+                                <li data-key="att_hk_li1">Giếng trời tự nhiên</li>
+                                <li data-key="att_hk_li2">Bia ký triều Nguyễn</li>
+                                <li data-key="att_hk_li3">Không gian linh thiêng</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Card: Động Âm Phủ -->
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden transition duration-300 hover:shadow-xl hover:-translate-y-1 border border-stone-200">
+                        <img src="dong-am-phu-1_1679474728.jpg" alt="Động Âm Phủ" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h4 class="text-2xl font-bold text-green-800 mb-3" data-key="att_ap_h">Động Âm Phủ</h4>
+                            <p class="text-gray-600 mb-4" data-key="att_ap_p">Mô phỏng 3 cảnh giới "Địa ngục – Trần gian – Thiên đường", động dài và sâu nhất, mang đậm dấu ấn văn hóa tâm linh.</p>
+                            <ul class="list-disc list-inside text-sm text-gray-500 space-y-1 pl-4">
+                                <li data-key="att_ap_li1">Mô phỏng Địa ngục – Thiên đường</li>
+                                <li data-key="att_ap_li2">Hang động dài và sâu</li>
+                                <li data-key="att_ap_li3">Giá trị giáo dục nhân quả</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Card: Chùa Tam Thai -->
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden transition duration-300 hover:shadow-xl hover:-translate-y-1 border border-stone-200">
+                        <img src="1709114521-justfly-chua-tam-thai-da-nang10.webp" alt="Chùa Tam Thai" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h4 class="text-2xl font-bold text-green-800 mb-3" data-key="att_tt_h">Chùa Tam Thai</h4>
+                            <p class="text-gray-600 mb-4" data-key="att_tt_p">Ngôi chùa cổ có từ thế kỷ XVII, là nơi du khách tìm đến sự tĩnh mịch và cầu an cho bản thân và gia đình.</p>
+                            <ul class="list-disc list-inside text-sm text-gray-500 space-y-1 pl-4">
+                                <li data-key="att_tt_li1">Kiến trúc cổ kính</li>
+                                <li data-key="att_tt_li2">Điểm cầu an linh thiêng</li>
+                                <li data-key="att_tt_li3">Không gian tĩnh mịch</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Card: Quần thể Danh thắng -->
+                    <div class="bg-stone-50 rounded-xl shadow-lg overflow-hidden transition duration-300 hover:shadow-xl hover:-translate-y-1 border border-stone-200 sm:col-span-2 lg:col-span-1">
+                        <div class="p-6 flex flex-col justify-between h-full">
+                            <div>
+                                <h4 class="text-2xl font-bold text-green-800 mb-3" data-key="att_qt_h">Quần thể Ngũ Hành Sơn</h4>
+                                <p class="text-gray-600 mb-4" data-key="att_qt_p">Tổng quan trải nghiệm khám phá toàn bộ quần thể núi đá vôi Thủy Sơn, Kim, Mộc, Hỏa, Thổ.</p>
+                                <ul class="list-disc list-inside text-sm text-gray-500 space-y-1 pl-4">
+                                    <li data-key="att_qt_li1">Thang máy Thủy Sơn tiện lợi</li>
+                                    <li data-key="att_qt_li2">Cổng trời hùng vĩ</li>
+                                    <li data-key="att_qt_li3">Đường mòn ngắm toàn cảnh Đà Nẵng</li>
+                                    <li data-key="att_qt_li4">Không khí trong lành, mát mẻ</li>
+                                </ul>
+                            </div>
+                            <a href="#gallery" class="mt-4 text-green-600 hover:text-green-700 font-semibold flex items-center" data-key="att_qt_btn">
+                                Xem thêm ảnh
+                                <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. Khu di tích lịch sử – địa chỉ đỏ (Historical Sites) -->
+            <section id="history" class="mb-20 pt-10" aria-label="Di Tích Lịch Sử">
+                <h3 class="text-base font-semibold text-green-600 uppercase tracking-wider mb-2" data-key="history_sub">Giá Trị Cội Nguồn</h3>
+                <h2 class="text-4xl font-extrabold text-stone-dark mb-12 border-b-2 border-green-500 pb-3 inline-block" data-key="history_h2">Khu Di Tích Lịch Sử – Địa Chỉ Đỏ</h2>
+
+                <!-- Timeline / Danh sách -->
+                <div class="relative">
+                    <!-- Đường kẻ thời gian (chỉ cho desktop) -->
+                    <div class="absolute hidden md:block w-0.5 bg-stone-300 h-full left-1/2 transform -translate-x-1/2"></div>
+                    
+                    <div class="space-y-12">
+                        
+                        <!-- Item 1: Di tích cách mạng K20 -->
+                        <div class="relative md:grid md:grid-cols-2 md:gap-12 items-center">
+                            <div class="md:order-1 md:col-span-1 md:text-left">
+                                <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-green-600 md:w-3/4 md:ml-auto">
+                                    <h4 class="text-2xl font-bold text-stone-dark mb-2" data-key="his_k20_h">Di tích cách mạng K20</h4>
+                                    <p class="text-gray-600" data-key="his_k20_p">Là căn cứ quan trọng thời chống Mỹ. Nơi đây vẫn giữ nguyên trạng hầm bí mật và đường hầm, tái hiện cuộc sống và chiến đấu của quân dân ta.</p>
+                                    <ul class="list-disc list-inside text-sm text-gray-500 mt-3 pl-4">
+                                        <li data-key="his_k20_li1">Căn cứ quan trọng thời chống Mỹ</li>
+                                        <li data-key="his_k20_li2">Hầm bí mật – đường hầm giữ nguyên trạng</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- Điểm mốc -->
+                            <div class="absolute md:relative top-0 md:top-auto left-0 md:left-auto md:col-span-2 flex justify-center">
+                                <div class="w-4 h-4 bg-green-600 rounded-full border-4 border-white shadow-xl hidden md:block"></div>
+                            </div>
+                        </div>
+
+                        <!-- Item 2: Nhà truyền thống K20 -->
+                        <div class="relative md:grid md:grid-cols-2 md:gap-12 items-center">
+                            <div class="md:order-2 md:col-span-1 md:text-right">
+                                <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-green-600 md:w-3/4 md:mr-auto">
+                                    <h4 class="text-2xl font-bold text-stone-dark mb-2" data-key="his_ntt_h">Nhà truyền thống K20</h4>
+                                    <p class="text-gray-600" data-key="his_ntt_p">Nơi trưng bày các hiện vật, tư liệu quý giá về cuộc kháng chiến anh dũng tại địa phương, cùng mô hình chiến trường xưa.</p>
+                                    <ul class="list-disc list-inside text-sm text-gray-500 mt-3 pl-4">
+                                        <li data-key="his_ntt_li1">Trưng bày hiện vật – tư liệu kháng chiến</li>
+                                        <li data-key="his_ntt_li2">Mô hình chiến trường xưa</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="absolute md:relative top-0 md:top-auto left-0 md:left-auto md:col-span-2 flex justify-center">
+                                <div class="w-4 h-4 bg-green-600 rounded-full border-4 border-white shadow-xl hidden md:block"></div>
+                            </div>
+                        </div>
+
+                        <!-- Item 3: Hầm bí mật & địa đạo thời chiến -->
+                        <div class="relative md:grid md:grid-cols-2 md:gap-12 items-center">
+                            <div class="md:order-1 md:col-span-1 md:text-left">
+                                <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-green-600 md:w-3/4 md:ml-auto">
+                                    <h4 class="text-2xl font-bold text-stone-dark mb-2" data-key="his_hb_h">Hầm bí mật & Địa đạo</h4>
+                                    <p class="text-gray-600" data-key="his_hb_p">Các hầm trú ẩn và địa đạo đã được khôi phục nguyên bản, giúp du khách hiểu rõ hơn về cuộc sống và ý chí quật cường thời chiến.</p>
+                                    <ul class="list-disc list-inside text-sm text-gray-500 mt-3 pl-4">
+                                        <li data-key="his_hb_li1">Hầm trú ẩn khôi phục nguyên bản</li>
+                                        <li data-key="his_hb_li2">Hiểu về cuộc sống thời chiến</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="absolute md:relative top-0 md:top-auto left-0 md:left-auto md:col-span-2 flex justify-center">
+                                <div class="w-4 h-4 bg-green-600 rounded-full border-4 border-white shadow-xl hidden md:block"></div>
+                            </div>
+                        </div>
+
+                        <!-- Item 4: Miếu và đền thờ liệt sĩ -->
+                        <div class="relative md:grid md:grid-cols-2 md:gap-12 items-center">
+                            <div class="md:order-2 md:col-span-1 md:text-right">
+                                <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-green-600 md:w-3/4 md:mr-auto">
+                                    <h4 class="text-2xl font-bold text-stone-dark mb-2" data-key="his_mls_h">Miếu và Đền thờ Liệt sĩ</h4>
+                                    <p class="text-gray-600" data-key="his_mls_p">Nơi tưởng niệm anh hùng, giáo dục truyền thống "Uống nước nhớ nguồn" cho thế hệ trẻ và du khách trong nước, quốc tế.</p>
+                                    <ul class="list-disc list-inside text-sm text-gray-500 mt-3 pl-4">
+                                        <li data-key="his_mls_li1">Giáo dục truyền thống yêu nước</li>
+                                        <li data-key="his_mls_li2">Tưởng niệm anh hùng hy sinh</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="absolute md:relative top-0 md:top-auto left-0 md:left-auto md:col-span-2 flex justify-center">
+                                <div class="w-4 h-4 bg-green-600 rounded-full border-4 border-white shadow-xl hidden md:block"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 5. Thư viện hình ảnh (Gallery) -->
+                <section id="gallery" class="mb-20 pt-10" aria-label="Thư Viện Hình Ảnh">
+                    <h3 class="text-base font-semibold text-green-600 uppercase tracking-wider mb-2" data-key="gallery_sub">Góc Nhìn Nghệ Thuật</h3>
+                    <h2 class="text-4xl font-extrabold text-stone-dark mb-12 border-b-2 border-green-500 pb-3 inline-block" data-key="gallery_h2">Thư Viện Hình Ảnh Tuyệt Đẹp</h2>
+
+                    <!-- Responsive Image Grid -->
+                    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                        <!-- Ảnh danh thắng -->
+                        <img src="ngu-hanh-son-03_1629767422.jpg" alt="Ảnh toàn cảnh danh thắng" class="w-full h-auto object-cover rounded-lg shadow-md hover:opacity-80 transition duration-300 transform hover:scale-[1.02]">
+                        <!-- Ảnh chùa – hang động -->
+                        <img src="Zt6Zx9qX-dong-huyen-khong-1.jpg" alt="Ảnh Động Huyền Không" class="w-full h-auto object-cover rounded-lg shadow-md hover:opacity-80 transition duration-300 transform hover:scale-[1.02]">
+                        <!-- Ảnh K20 & hiện vật -->
+                        <img src="khu-can-cu-cach-mang-k20-5.jpg" alt="Ảnh Di Tích K20" class="w-full h-auto object-cover rounded-lg shadow-md hover:opacity-80 transition duration-300 transform hover:scale-[1.02]">
+                        <!-- Ảnh tư liệu chiến tranh -->
+                        <img src="ngu-hanh-son-22.webp" alt="Ảnh hiện vật lịch sử" class="w-full h-auto object-cover rounded-lg shadow-md hover:opacity-80 transition duration-300 transform hover:scale-[1.02]">
+                        <!-- Ảnh toàn cảnh trên Thủy Sơn -->
+                        <img src="1280px-Ngu_hanh_son_map.jpg" alt="Ảnh toàn cảnh Đà Nẵng từ Thủy Sơn" class="w-full h-auto object-cover rounded-lg shadow-md hover:opacity-80 transition duration-300 transform hover:scale-[1.02]">
+                        <!-- Ảnh chùa Tam Thai -->
+                        <img src="1709114521-justfly-chua-tam-thai-da-nang10.webp" alt="Ảnh Chùa Tam Thai" class="w-full h-auto object-cover rounded-lg shadow-md hover:opacity-80 transition duration-300 transform hover:scale-[1.02]">
+                        <!-- Ảnh hang động (dài) -->
+                        <img src="dong-am-phu-1_1679474728.jpg" alt="Ảnh Động Âm Phủ" class="w-full h-auto object-cover rounded-lg shadow-md hover:opacity-80 transition duration-300 transform hover:scale-[1.02]">
+                        <!-- Ảnh chi tiết chạm khắc -->
+                        <img src="base64-1673863466351405170587.png" alt="Ảnh chi tiết chạm khắc đá" class="w-full h-auto object-cover rounded-lg shadow-md hover:opacity-80 transition duration-300 transform hover:scale-[1.02]">
+                    </div>
+                </section>
+                
+                <!-- 6. Hướng dẫn tham quan (Visitor Guide) & LLM Feature -->
+                <section id="guide" class="mb-20 pt-10" aria-label="Hướng Dẫn Tham Quan">
+                    <h3 class="text-base font-semibold text-green-600 uppercase tracking-wider mb-2" data-key="guide_sub">Kinh Nghiệm Du Lịch</h3>
+                    <h2 class="text-4xl font-extrabold text-stone-dark mb-12 border-b-2 border-green-500 pb-3 inline-block" data-key="guide_h2">Hướng Dẫn & Lịch Trình Tùy Chỉnh</h2>
+
+                    <div class="grid md:grid-cols-3 gap-8 mb-12">
+                        
+                        <!-- Giá vé & Giờ mở cửa -->
+                        <div class="bg-white p-6 rounded-xl shadow-lg border-l-4 border-green-500">
+                            <h4 class="text-2xl font-bold text-green-700 mb-4" data-key="guide_prices_h">Vé & Giờ Mở Cửa</h4>
+                            <ul class="space-y-3 text-gray-600">
+                                <li data-key="guide_prices_li1"><strong class="text-stone-dark">Vé tham quan Thủy Sơn:</strong> 40.000 VNĐ/người</li>
+                                <li data-key="guide_prices_li2"><strong class="text-stone-dark">Vé Động Âm Phủ:</strong> 20.000 VNĐ/người</li>
+                                <li data-key="guide_prices_li3"><strong class="text-stone-dark">Thang máy:</strong> 15.000 VNĐ/lượt</li>
+                                <li class="pt-2" data-key="guide_prices_li4"><strong class="text-stone-dark">Giờ mở cửa:</strong> 7:00 – 17:30 (Hàng ngày)</li>
+                            </ul>
+                        </div>
+
+                        <!-- Gợi ý lịch trình mặc định -->
+                        <div class="bg-white p-6 rounded-xl shadow-lg border-l-4 border-green-500">
+                            <h4 class="text-2xl font-bold text-green-700 mb-4" data-key="guide_itinerary_h">Gợi Ý Lịch Trình</h4>
+                            <ul class="space-y-3 text-gray-600">
+                                <li data-key="guide_itinerary_li1"><strong class="text-stone-dark">2 giờ:</strong> Khám phá Núi Thủy Sơn (Chùa Linh Ứng, Động Huyền Không).</li>
+                                <li data-key="guide_itinerary_li2"><strong class="text-stone-dark">4 giờ:</strong> Thủy Sơn + Động Âm Phủ + Làng nghề đá.</li>
+                                <li data-key="guide_itinerary_li3"><strong class="text-stone-dark">6 giờ:</strong> Khám phá toàn diện (Thủy Sơn, Âm Phủ, Di tích K20, ăn trưa).</li>
+                            </ul>
+                        </div>
+
+                        <!-- Lưu ý an toàn & Quy định -->
+                        <div class="bg-white p-6 rounded-xl shadow-lg border-l-4 border-green-500">
+                            <h4 class="text-2xl font-bold text-green-700 mb-4" data-key="guide_notes_h">Lưu Ý Quan Trọng</h4>
+                            <ul class="space-y-3 text-gray-600">
+                                <li data-key="guide_notes_li1"><strong class="text-stone-dark">Quy định:</strong> Mặc trang phục lịch sự, kín đáo khi vào chùa, đền thờ.</li>
+                                <li data-key="guide_notes_li2"><strong class="text-stone-dark">An toàn:</strong> Mang giày thể thao, đi lại cẩn thận khi leo núi và trong hang động.</li>
+                                <li data-key="guide_notes_li3"><strong class="text-stone-dark">Bảo vệ:</strong> Giữ gìn vệ sinh chung, không chạm khắc lên đá.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- LLM Feature: Lên Kế Hoạch Tùy Chỉnh -->
+                    <div class="bg-green-50 p-8 rounded-xl shadow-inner border border-green-200 mt-12">
+                        <h4 class="text-3xl font-extrabold text-green-800 mb-6 flex items-center" data-key="ai_h">
+                            Lên Kế Hoạch Tham Quan Tùy Chỉnh ✨
+                        </h4>
+                        <p class="text-gray-600 mb-6" data-key="ai_p">Sử dụng Trí tuệ Nhân tạo để tạo lịch trình tối ưu dựa trên thời gian và sở thích của bạn.</p>
+                        
+                        <div class="grid sm:grid-cols-3 gap-6 items-end">
+                            <!-- Input 1: Thời gian -->
+                            <div>
+                                <label for="time_select" class="block text-sm font-medium text-stone-dark mb-2" data-key="ai_time_label">Thời gian bạn có:</label>
+                                <select id="time_select" class="w-full p-3 border border-stone-300 rounded-lg focus:ring-green-500 focus:border-green-500 transition">
+                                    <option value="2 giờ" data-key="ai_time_opt1">2 giờ (Khám phá nhanh)</option>
+                                    <option value="4 giờ" data-key="ai_time_opt2">4 giờ (Nửa buổi)</option>
+                                    <option value="6 giờ" selected data-key="ai_time_opt3">6 giờ (Trọn vẹn một buổi)</option>
+                                    <option value="1 ngày" data-key="ai_time_opt4">1 ngày (Kết hợp làng nghề và bãi biển)</option>
+                                </select>
+                            </div>
+                            <!-- Input 2: Sở thích -->
+                            <div>
+                                <label for="interest_select" class="block text-sm font-medium text-stone-dark mb-2" data-key="ai_interest_label">Trọng tâm tham quan:</label>
+                                <select id="interest_select" class="w-full p-3 border border-stone-300 rounded-lg focus:ring-green-500 focus:border-green-500 transition">
+                                    <option value="Tâm linh và Văn hóa" data-key="ai_interest_opt1">Tâm linh và Văn hóa</option>
+                                    <option value="Lịch sử và Cội nguồn" data-key="ai_interest_opt2">Lịch sử và Cội nguồn</option>
+                                    <option value="Khám phá và Chụp ảnh" data-key="ai_interest_opt3">Khám phá và Chụp ảnh</option>
+                                </select>
+                            </div>
+                            <!-- Button -->
+                            <div>
+                                <button id="generate_itinerary_btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg shadow-md transition duration-300 transform hover:scale-[1.02] flex items-center justify-center">
+                                    <span id="btn_text" data-key="ai_btn">Tạo Lịch Trình ✨</span>
+                                    <div id="loading_spinner" class="spinner hidden ml-2"></div>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Output Area -->
+                        <div id="itinerary_output" class="mt-8 p-6 bg-white rounded-xl shadow-inner border border-stone-200 hidden">
+                            <h5 class="text-xl font-bold text-green-700 mb-3" data-key="ai_output_h">Lịch trình đề xuất:</h5>
+                            <div id="itinerary_content" class="prose max-w-none text-gray-700 leading-relaxed">
+                                <!-- Nội dung lịch trình sẽ được chèn vào đây -->
+                            </div>
+                        </div>
+                        <div id="error_message" class="mt-4 text-red-600 font-medium hidden"></div>
+
+                    </div>
+                </section>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-stone-800 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h5 class="text-3xl font-bold text-green-400 mb-4" data-key="footer_h">Ngũ Hành Sơn</h5>
+            <p class="text-sm text-stone-400" data-key="footer_p">© 2024 Bản quyền thuộc về Ban Quản lý Danh thắng Ngũ Hành Sơn. Mọi chi tiết xin liên hệ Phường Ngũ Hành Sơn, TP. Đà Nẵng.</p>
+            <div class="mt-6 space-x-4 text-sm">
+                <a href="#about" class="hover:text-green-400 transition duration-200" data-key="footer_link1">Giới Thiệu</a>
+                <span class="text-stone-600">|</span>
+                <a href="#guide" class="hover:text-green-400 transition duration-200" data-key="footer_link2">Liên Hệ</a>
+                <span class="text-stone-600">|</span>
+                <a href="#" class="hover:text-green-400 transition duration-200" data-key="footer_link3">Chính Sách Bảo Mật</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- 1. Bộ Dữ Liệu Dịch Thuật (Translation Dictionary) ---
+        // Bạn có thể dễ dàng thêm ngôn ngữ mới bằng cách thêm một key mới (ví dụ: 'ko')
+        const translations = {
+            'vi': {
+                'title_page': 'Ngũ Hành Sơn – Nơi gìn giữ những nét đẹp văn hoá',
+                
+                // Nav
+                'nav_home': 'Trang Chủ',
+                'nav_about': 'Giới Thiệu',
+                'nav_attractions': 'Danh Lam',
+                'nav_history': 'Di Tích Lịch Sử',
+                'nav_gallery': 'Thư Viện Ảnh',
+                'nav_guide': 'Hướng Dẫn',
+
+                // Hero
+                'hero_h1': 'Ngũ Hành Sơn',
+                'hero_h2': 'Nơi gìn giữ những nét đẹp văn hoá',
+                'hero_p': 'Chào mừng bạn đến với phường Ngũ Hành Sơn – vùng đất hội tụ vẻ đẹp thiên nhiên kỳ thú cùng những giá trị lịch sử – văn hoá đặc sắc. Du khách có thể khám phá núi đá vôi, chùa chiền linh thiêng, hang động cổ xưa và nhiều địa chỉ đỏ gắn liền với lịch sử dân tộc.',
+                'hero_button': 'Khám Phá Ngay',
+
+                // Highlights
+                'highlight_1': 'Quần thể Danh thắng',
+                'highlight_2': 'Chùa, Đền, Động',
+                'highlight_3': 'Di Tích Lịch Sử',
+                'highlight_4': 'Thư Viện Ảnh',
+                'highlight_5': 'Bản Đồ Du Lịch',
+                
+                // About
+                'about_sub': 'Giới Thiệu Chung',
+                'about_h2': 'Vùng Đất Ngũ Hành Sơn',
+                'about_p1': 'Ngũ Hành Sơn, tọa lạc tại phường Ngũ Hành Sơn, bên bờ biển Đà Nẵng, là một tuyệt tác thiên nhiên bao gồm quần thể 5 ngọn núi đá vôi được đặt tên theo thuyết Ngũ Hành: Kim – Mộc – Thủy – Hỏa – Thổ.',
+                'about_feat1_h': 'Giá Trị Tự Nhiên',
+                'about_feat1_p': 'Quần thể núi đá, hang động, rừng cây và bãi biển tạo nên hệ sinh thái đa dạng, không khí trong lành.',
+                'about_feat2_h': 'Văn Hóa – Tâm Linh',
+                'about_feat2_p': 'Nơi lưu giữ các ngôi chùa, động từ thế kỷ XVII, là trung tâm Phật giáo linh thiêng của khu vực.',
+                'about_feat3_h': 'Giá Trị Lịch Sử',
+                'about_feat3_p': 'Là "Địa chỉ đỏ" quan trọng, gắn liền với các di tích và căn cứ kháng chiến trong thời kỳ chống Mỹ.',
+                
+                // Attractions
+                'attractions_sub': 'Du Khách Thường Ghé Thăm',
+                'attractions_h2': 'Danh Lam Thắng Cảnh Nổi Bật',
+                'att_ts_h': 'Núi Thủy Sơn',
+                'att_ts_p': 'Ngọn núi lớn và đẹp nhất, nơi tập trung hầu hết các công trình kiến trúc Phật giáo và hang động huyền bí.',
+                'att_ts_li1': 'Chùa Tam Thai cổ kính',
+                'att_ts_li2': 'Chùa Linh Ứng (Ngũ Hành Sơn)',
+                'att_ts_li3': 'Động Huyền Không kỳ vĩ',
+                'att_ts_li4': 'Vọng Giang Đài – Vọng Hải Đài',
+                'att_hk_h': 'Động Huyền Không',
+                'att_hk_p': 'Một hang động lớn, mở ra giếng trời tự nhiên, tạo nên luồng ánh sáng độc đáo, là điểm check-in nổi tiếng.',
+                'att_hk_li1': 'Giếng trời tự nhiên',
+                'att_hk_li2': 'Bia ký triều Nguyễn',
+                'att_hk_li3': 'Không gian linh thiêng',
+                'att_ap_h': 'Động Âm Phủ',
+                'att_ap_p': 'Mô phỏng 3 cảnh giới "Địa ngục – Trần gian – Thiên đường", động dài và sâu nhất, mang đậm dấu ấn văn hóa tâm linh.',
+                'att_ap_li1': 'Mô phỏng Địa ngục – Thiên đường',
+                'att_ap_li2': 'Hang động dài và sâu',
+                'att_ap_li3': 'Giá trị giáo dục nhân quả',
+                'att_tt_h': 'Chùa Tam Thai',
+                'att_tt_p': 'Ngôi chùa cổ có từ thế kỷ XVII, là nơi du khách tìm đến sự tĩnh mịch và cầu an cho bản thân và gia đình.',
+                'att_tt_li1': 'Kiến trúc cổ kính',
+                'att_tt_li2': 'Điểm cầu an linh thiêng',
+                'att_tt_li3': 'Không gian tĩnh mịch',
+                'att_qt_h': 'Quần thể Ngũ Hành Sơn',
+                'att_qt_p': 'Tổng quan trải nghiệm khám phá toàn bộ quần thể núi đá vôi Thủy Sơn, Kim, Mộc, Hỏa, Thổ.',
+                'att_qt_li1': 'Thang máy Thủy Sơn tiện lợi',
+                'att_qt_li2': 'Cổng trời hùng vĩ',
+                'att_qt_li3': 'Đường mòn ngắm toàn cảnh Đà Nẵng',
+                'att_qt_li4': 'Không khí trong lành, mát mẻ',
+                'att_qt_btn': 'Xem thêm ảnh',
+                
+                // History
+                'history_sub': 'Giá Trị Cội Nguồn',
+                'history_h2': 'Khu Di Tích Lịch Sử – Địa Chỉ Đỏ',
+                'his_k20_h': 'Di tích cách mạng K20',
+                'his_k20_p': 'Là căn cứ quan trọng thời chống Mỹ. Nơi đây vẫn giữ nguyên trạng hầm bí mật và đường hầm, tái hiện cuộc sống và chiến đấu của quân dân ta.',
+                'his_k20_li1': 'Căn cứ quan trọng thời chống Mỹ',
+                'his_k20_li2': 'Hầm bí mật – đường hầm giữ nguyên trạng',
+                'his_ntt_h': 'Nhà truyền thống K20',
+                'his_ntt_p': 'Nơi trưng bày các hiện vật, tư liệu quý giá về cuộc kháng chiến anh dũng tại địa phương, cùng mô hình chiến trường xưa.',
+                'his_ntt_li1': 'Trưng bày hiện vật – tư liệu kháng chiến',
+                'his_ntt_li2': 'Mô hình chiến trường xưa',
+                'his_hb_h': 'Hầm bí mật & Địa đạo',
+                'his_hb_p': 'Các hầm trú ẩn và địa đạo đã được khôi phục nguyên bản, giúp du khách hiểu rõ hơn về cuộc sống và ý chí quật cường thời chiến.',
+                'his_hb_li1': 'Hầm trú ẩn khôi phục nguyên bản',
+                'his_hb_li2': 'Hiểu về cuộc sống thời chiến',
+                'his_mls_h': 'Miếu và Đền thờ Liệt sĩ',
+                'his_mls_p': 'Nơi tưởng niệm anh hùng, giáo dục truyền thống "Uống nước nhớ nguồn" cho thế hệ trẻ và du khách trong nước, quốc tế.',
+                'his_mls_li1': 'Giáo dục truyền thống yêu nước',
+                'his_mls_li2': 'Tưởng niệm anh hùng hy sinh',
+
+                // Gallery
+                'gallery_sub': 'Góc Nhìn Nghệ Thuật',
+                'gallery_h2': 'Thư Viện Hình Ảnh Tuyệt Đẹp',
+                
+                // Guide
+                'guide_sub': 'Kinh Nghiệm Du Lịch',
+                'guide_h2': 'Hướng Dẫn & Lịch Trình Tùy Chỉnh',
+                'guide_prices_h': 'Vé & Giờ Mở Cửa',
+                'guide_prices_li1': 'Vé tham quan Thủy Sơn: 40.000 VNĐ/người',
+                'guide_prices_li2': 'Vé Động Âm Phủ: 20.000 VNĐ/người',
+                'guide_prices_li3': 'Thang máy: 15.000 VNĐ/lượt',
+                'guide_prices_li4': 'Giờ mở cửa: 7:00 – 17:30 (Hàng ngày)',
+                'guide_itinerary_h': 'Gợi Ý Lịch Trình',
+                'guide_itinerary_li1': '2 giờ: Khám phá Núi Thủy Sơn (Chùa Linh Ứng, Động Huyền Không).',
+                'guide_itinerary_li2': '4 giờ: Thủy Sơn + Động Âm Phủ + Làng nghề đá.',
+                'guide_itinerary_li3': '6 giờ: Khám phá toàn diện (Thủy Sơn, Âm Phủ, Di tích K20, ăn trưa).',
+                'guide_notes_h': 'Lưu Ý Quan Trọng',
+                'guide_notes_li1': 'Quy định: Mặc trang phục lịch sự, kín đáo khi vào chùa, đền thờ.',
+                'guide_notes_li2': 'An toàn: Mang giày thể thao, đi lại cẩn thận khi leo núi và trong hang động.',
+                'guide_notes_li3': 'Bảo vệ: Giữ gìn vệ sinh chung, không chạm khắc lên đá.',
+
+                // AI Feature
+                'ai_h': 'Lên Kế Hoạch Tham Quan Tùy Chỉnh ✨',
+                'ai_p': 'Sử dụng Trí tuệ Nhân tạo để tạo lịch trình tối ưu dựa trên thời gian và sở thích của bạn.',
+                'ai_time_label': 'Thời gian bạn có:',
+                'ai_time_opt1': '2 giờ (Khám phá nhanh)',
+                'ai_time_opt2': '4 giờ (Nửa buổi)',
+                'ai_time_opt3': '6 giờ (Trọn vẹn một buổi)',
+                'ai_time_opt4': '1 ngày (Kết hợp làng nghề và bãi biển)',
+                'ai_interest_label': 'Trọng tâm tham quan:',
+                'ai_interest_opt1': 'Tâm linh và Văn hóa',
+                'ai_interest_opt2': 'Lịch sử và Cội nguồn',
+                'ai_interest_opt3': 'Khám phá và Chụp ảnh',
+                'ai_btn': 'Tạo Lịch Trình ✨',
+                'ai_output_h': 'Lịch trình đề xuất:',
+
+                // Footer
+                'footer_h': 'Ngũ Hành Sơn',
+                'footer_p': '© 2024 Bản quyền thuộc về Ban Quản lý Danh thắng Ngũ Hành Sơn. Mọi chi tiết xin liên hệ Phường Ngũ Hành Sơn, TP. Đà Nẵng.',
+                'footer_link1': 'Giới Thiệu',
+                'footer_link2': 'Liên Hệ',
+                'footer_link3': 'Chính Sách Bảo Mật'
+            },
+            'en': {
+                'title_page': 'Marble Mountains – Preserving cultural heritage',
+                
+                // Nav
+                'nav_home': 'Home',
+                'nav_about': 'About',
+                'nav_attractions': 'Attractions',
+                'nav_history': 'Historical Sites',
+                'nav_gallery': 'Gallery',
+                'nav_guide': 'Visitor Guide',
+
+                // Hero
+                'hero_h1': 'Marble Mountains',
+                'hero_h2': 'A place that preserves cultural beauty',
+                'hero_p': 'Welcome to Marble Mountains (Ngũ Hành Sơn), a natural masterpiece near Da Nang\'s coast. This area combines stunning natural beauty with unique historical and cultural values, featuring limestone mountains, sacred pagodas, ancient caves, and historical sites related to the national resistance.',
+                'hero_button': 'Explore Now',
+
+                // Highlights
+                'highlight_1': 'Scenic Complex',
+                'highlight_2': 'Pagodas, Temples, Caves',
+                'highlight_3': 'Historical Sites',
+                'highlight_4': 'Photo Gallery',
+                'highlight_5': 'Tourist Map',
+                
+                // About
+                'about_sub': 'General Introduction',
+                'about_h2': 'The Land of Marble Mountains',
+                'about_p1': 'Marble Mountains (Ngũ Hành Sơn), located in Da Nang, is a natural masterpiece consisting of 5 limestone peaks named after the five elements: Metal – Wood – Water – Fire – Earth.',
+                'about_feat1_h': 'Natural Value',
+                'about_feat1_p': 'The complex of mountains, caves, forests, and beaches creates a diverse ecosystem and fresh air.',
+                'about_feat2_h': 'Spiritual and Cultural',
+                'about_feat2_p': 'Home to ancient pagodas and caves dating back to the 17th century, it is a sacred Buddhist center.',
+                'about_feat3_h': 'Historical Value',
+                'about_feat3_p': 'An important historical "Red Address" linked to resistance bases during the American War.',
+                
+                // Attractions
+                'attractions_sub': 'Popular Destinations',
+                'attractions_h2': 'Outstanding Scenic Attractions',
+                'att_ts_h': 'Water Mountain (Thủy Sơn)',
+                'att_ts_p': 'The largest and most beautiful mountain, home to most of the Buddhist architecture and mysterious caves.',
+                'att_ts_li1': 'Ancient Tam Thai Pagoda',
+                'att_ts_li2': 'Linh Ứng Pagoda (Marble Mountains)',
+                'att_ts_li3': 'The magnificent Huyền Không Cave',
+                'att_ts_li4': 'Vọng Giang Đài – Vọng Hải Đài (Viewpoints)',
+                'att_hk_h': 'Huyền Không Cave',
+                'att_hk_p': 'A large cave with a natural skylight, creating a unique light stream, a famous check-in spot.',
+                'att_hk_li1': 'Natural skylight',
+                'att_hk_li2': 'Nguyễn Dynasty stele',
+                'att_hk_li3': 'Sacred space',
+                'att_ap_h': 'Hell Cave (Động Âm Phủ)',
+                'att_ap_p': 'Modeling the three realms "Hell – Mortal World – Heaven," this is the longest and deepest cave, rich in spiritual culture.',
+                'att_ap_li1': 'Modeling Hell – Heaven',
+                'att_ap_li2': 'Long and deep cave',
+                'att_ap_li3': 'Value of moral education',
+                'att_tt_h': 'Tam Thai Pagoda',
+                'att_tt_p': 'An ancient pagoda dating back to the 17th century, where visitors seek tranquility and peace for themselves and their families.',
+                'att_tt_li1': 'Ancient architecture',
+                'att_tt_li2': 'Sacred place to pray for peace',
+                'att_tt_li3': 'Tranquil space',
+                'att_qt_h': 'Marble Mountains Complex',
+                'att_qt_p': 'An overview of exploring the entire complex of limestone mountains: Thủy Sơn, Kim, Mộc, Hỏa, Thổ.',
+                'att_qt_li1': 'Convenient Thủy Sơn elevator',
+                'att_qt_li2': 'Magnificent Heaven\'s Gate',
+                'att_qt_li3': 'Viewing path for a panoramic view of Da Nang',
+                'att_qt_li4': 'Fresh and cool atmosphere',
+                'att_qt_btn': 'View more photos',
+                
+                // History
+                'history_sub': 'Value of Roots',
+                'history_h2': 'Historical Sites – Red Addresses',
+                'his_k20_h': 'K20 Revolutionary Relic',
+                'his_k20_p': 'An important base during the American War. The secret bunker and tunnel remain intact, recreating the life and struggle of the people and soldiers.',
+                'his_k20_li1': 'Important base during the American War',
+                'his_k20_li2': 'Secret bunker – intact tunnels',
+                'his_ntt_h': 'K20 Traditional House',
+                'his_ntt_p': 'Exhibiting precious artifacts and documents about the heroic resistance in the area, along with models of the former battlefield.',
+                'his_ntt_li1': 'Display of artifacts – resistance documents',
+                'his_ntt_li2': 'Models of the former battlefield',
+                'his_hb_h': 'Secret Bunkers & Tunnels',
+                'his_hb_p': 'The shelters and tunnels have been authentically restored, helping visitors understand the life and resilient spirit during the war.',
+                'his_hb_li1': 'Authentically restored shelters',
+                'his_hb_li2': 'Understanding wartime life',
+                'his_mls_h': 'Shrine and Temple for Martyrs',
+                'his_mls_p': 'A place to commemorate heroes, educating the tradition of "Drinking water, remembering the source" for young generations and international tourists.',
+                'his_mls_li1': 'Educating patriotic traditions',
+                'his_mls_li2': 'Commemorating fallen heroes',
+
+                // Gallery
+                'gallery_sub': 'Artistic View',
+                'gallery_h2': 'Beautiful Photo Gallery',
+                
+                // Guide
+                'guide_sub': 'Travel Experience',
+                'guide_h2': 'Customizable Guide & Itinerary',
+                'guide_prices_h': 'Tickets & Opening Hours',
+                'guide_prices_li1': 'Water Mountain (Thủy Sơn) Ticket: 40,000 VNĐ/person',
+                'guide_prices_li2': 'Hell Cave (Động Âm Phủ) Ticket: 20,000 VNĐ/person',
+                'guide_prices_li3': 'Elevator: 15,000 VNĐ/ride',
+                'guide_prices_li4': 'Opening Hours: 7:00 AM – 5:30 PM (Daily)',
+                'guide_itinerary_h': 'Suggested Itineraries',
+                'guide_itinerary_li1': '2 hours: Explore Water Mountain (Linh Ứng Pagoda, Huyền Không Cave).',
+                'guide_itinerary_li2': '4 hours: Water Mountain + Hell Cave + Stone carving village.',
+                'guide_itinerary_li3': '6 hours: Comprehensive exploration (Water Mountain, Hell Cave, K20 Relic, lunch).',
+                'guide_notes_h': 'Important Notes',
+                'guide_notes_li1': 'Attire: Wear polite, modest clothing when entering pagodas and temples.',
+                'guide_notes_li2': 'Safety: Wear sports shoes, walk carefully when climbing and in caves.',
+                'guide_notes_li3': 'Preservation: Maintain general hygiene, do not carve on the stone.',
+
+                // AI Feature
+                'ai_h': 'Customized Tour Planning ✨',
+                'ai_p': 'Use Artificial Intelligence to create an optimal itinerary based on your time and interests.',
+                'ai_time_label': 'Time you have:',
+                'ai_time_opt1': '2 hours (Quick discovery)',
+                'ai_time_opt2': '4 hours (Half day)',
+                'ai_time_opt3': '6 hours (Full half day)',
+                'ai_time_opt4': '1 day (Combining craft village and beach)',
+                'ai_interest_label': 'Focus of visit:',
+                'ai_interest_opt1': 'Spiritual and Cultural',
+                'ai_interest_opt2': 'History and Roots',
+                'ai_interest_opt3': 'Exploration and Photography',
+                'ai_btn': 'Create Itinerary ✨',
+                'ai_output_h': 'Suggested itinerary:',
+
+                // Footer
+                'footer_h': 'Marble Mountains',
+                'footer_p': '© 2024 Copyright by Marble Mountains Scenic Management Board. For details, please contact Marble Mountains Ward, Da Nang City.',
+                'footer_link1': 'About',
+                'footer_link2': 'Contact',
+                'footer_link3': 'Privacy Policy'
+            }
+        };
+
+        // --- 2. Hỗ trợ LLM - Xử lý API Call với Exponential Backoff ---
+        const apiKey = "AIzaSyAooVuGGpdL427hDjVRYK9OUBG4uszcDUY"; // API key được cung cấp bởi môi trường runtime
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+
+        async function fetchWithBackoff(url, options, maxRetries = 5) {
+            for (let i = 0; i < maxRetries; i++) {
+                try {
+                    const response = await fetch(url, options);
+                    if (response.ok) { return response; }
+                    if (response.status === 429 || response.status >= 500) {
+                        const delay = Math.pow(2, i) * 1000 + Math.random() * 1000;
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                        continue;
+                    }
+                    throw new Error(`API error: ${response.statusText}`);
+                } catch (error) {
+                    if (i === maxRetries - 1) { throw error; }
+                    const delay = Math.pow(2, i) * 1000 + Math.random() * 1000;
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                }
+            }
+            throw new Error("API call failed after maximum retries.");
+        }
+
+        /**
+         * Chuyển đổi văn bản Markdown thành HTML cơ bản (để hiển thị danh sách và đoạn văn)
+         */
+        function markdownToHtml(markdown) {
+            let html = markdown;
+            // Chuyển đổi tiêu đề H3 (###) thành <h4>
+            html = html.replace(/^### (.*$)/gim, '<h4>$1</h4>');
+            // Chuyển đổi danh sách không thứ tự (-) thành <ul><li>
+            html = html.replace(/^\s*-\s+(.*)$/gim, '<li>$1</li>');
+            html = html.replace(/(\n<li>.*<\/li>)+/gs, '<ul>$1</ul>');
+            // Chuyển đổi in đậm
+            html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            // Thay thế các ký tự xuống dòng bằng thẻ <br> (trừ khi nằm trong <ul>)
+            html = html.replace(/\n(?!<)/g, '<br>');
+            return html;
+        }
+
+        // --- 3. Logic Chính cho tính năng Lên Kế Hoạch (LLM) ---
+        const timeSelect = document.getElementById('time_select');
+        const interestSelect = document.getElementById('interest_select');
+        const generateBtn = document.getElementById('generate_itinerary_btn');
+        const btnText = document.getElementById('btn_text');
+        const loadingSpinner = document.getElementById('loading_spinner');
+        const itineraryOutput = document.getElementById('itinerary_output');
+        const itineraryContent = document.getElementById('itinerary_content');
+        const errorMessage = document.getElementById('error_message');
+
+        generateBtn.addEventListener('click', generateItinerary);
+
+        async function generateItinerary() {
+            const time = timeSelect.value;
+            const interest = interestSelect.value;
+            const currentLang = localStorage.getItem('lang') || 'vi';
+            const targetLang = currentLang === 'vi' ? 'Vietnamese' : 'English';
+
+            // Ẩn output cũ và hiện loading
+            itineraryOutput.classList.add('hidden');
+            errorMessage.classList.add('hidden');
+            btnText.textContent = currentLang === 'vi' ? 'Đang Tạo...' : 'Generating...';
+            loadingSpinner.classList.remove('hidden');
+            generateBtn.disabled = true;
+
+            // Xây dựng System Instruction (Giúp model đóng vai trò là chuyên gia du lịch)
+            const systemPrompt = `Act as a professional tourism guide specialized in Da Nang's Marble Mountains (Ngũ Hành Sơn). Your response must be in detailed, formal ${targetLang}. Based on the user's available time and interests, create an optimal, step-by-step itinerary. Include estimated time for each stop and crucial visitor notes (Lưu ý/Notes). Use Markdown formatting (h3 for main sections, bullet points for steps). The itinerary should be practical and prioritize the selected interests.`;
+
+            // Xây dựng User Query (Truy vấn của người dùng)
+            const userQuery = `Create a travel plan for Marble Mountains. The time I have is "${time}". The focus of the visit is "${interest}". The output language must be ${targetLang}. Include main locations: Water Mountain (Tam Thai Pagoda, Huyền Không Cave, Viewpoints), Hell Cave, and K20 Historical Relic.`;
+
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                tools: [{ "google_search": {} }], 
+                systemInstruction: {
+                    parts: [{ text: systemPrompt }]
+                },
+            };
+
+            const options = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            };
+
+            try {
+                const response = await fetchWithBackoff(apiUrl, options);
+                const result = await response.json();
+                
+                const candidate = result.candidates?.[0];
+                const text = candidate?.content?.parts?.[0]?.text;
+
+                if (text) {
+                    // Cập nhật tiêu đề output theo ngôn ngữ hiện tại
+                    const outputTitleKey = 'ai_output_h';
+                    const outputTitleElement = document.getElementById('itinerary_output').querySelector('h5');
+                    outputTitleElement.textContent = translations[currentLang][outputTitleKey];
+
+                    itineraryContent.innerHTML = markdownToHtml(text);
+                    itineraryOutput.classList.remove('hidden');
+                } else {
+                    const errorMsg = currentLang === 'vi' ? 'Lỗi: Không thể tạo lịch trình. Vui lòng thử lại sau.' : 'Error: Could not generate itinerary. Please try again later.';
+                    errorMessage.textContent = errorMsg;
+                    errorMessage.classList.remove('hidden');
+                    console.error('API response missing text:', result);
+                }
+            } catch (error) {
+                const errorMsg = currentLang === 'vi' ? 'Lỗi kết nối API. Vui lòng kiểm tra console để biết chi tiết.' : 'API connection error. Please check the console for details.';
+                errorMessage.textContent = errorMsg;
+                errorMessage.classList.remove('hidden');
+                console.error('Fetch error:', error);
+            } finally {
+                // Tắt loading và khôi phục nút
+                btnText.textContent = translations[currentLang]['ai_btn'];
+                loadingSpinner.classList.add('hidden');
+                generateBtn.disabled = false;
+            }
+        }
+
+
+        // --- 4. Logic Đa Ngôn Ngữ ---
+        
+        /**
+         * Chuyển đổi ngôn ngữ giao diện
+         */
+        function setLanguage(lang) {
+            // Lưu ngôn ngữ đã chọn vào Local Storage
+            localStorage.setItem('lang', lang);
+
+            // Cập nhật các nút ngôn ngữ active
+            document.querySelectorAll('.lang-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(`lang-${lang}`).classList.add('active');
+            // Cập nhật cho cả mobile nếu có
+            const mobileBtn = document.getElementById(`lang-${lang}-mobile`);
+            if (mobileBtn) mobileBtn.classList.add('active');
+
+
+            // Lặp qua tất cả các phần tử có data-key và cập nhật nội dung
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (translations[lang] && translations[lang][key]) {
+                    const text = translations[lang][key];
+
+                    // Xử lý đặc biệt cho <title>
+                    if (el.tagName === 'TITLE') {
+                        document.title = text;
+                    }
+                    // Xử lý cho các phần tử <option> trong <select>
+                    else if (el.tagName === 'OPTION') {
+                         // Lấy giá trị sau dấu ":" (nếu có)
+                        const displayValue = text.includes(':') ? text.split(':').slice(1).join(':').trim() : text;
+                        el.textContent = displayValue;
+                    }
+                    // Xử lý cho thẻ <a> không có nội dung text (chỉ có icon)
+                    else if (el.children.length === 0 || (el.children.length === 1 && el.querySelector('svg'))) {
+                        el.textContent = text;
+                    }
+                    // Trường hợp chung: innerText
+                    else {
+                        // Kiểm tra nếu phần tử có chứa <strong> hoặc <span> bên trong
+                        // thì chỉ dịch phần tử text
+                        const strongTag = el.querySelector('strong');
+                        const spanTag = el.querySelector('span');
+
+                        if (strongTag && key.endsWith('_li')) {
+                            // Xử lý cho list item (li) có <strong> như trong phần prices
+                            const parts = text.split(':');
+                            const boldPart = parts[0];
+                            const normalPart = parts.slice(1).join(':');
+                            el.innerHTML = `<strong class="text-stone-dark">${boldPart}:</strong> ${normalPart}`;
+                        } else if (spanTag && key === 'about_p1') {
+                            // Xử lý cho about_p1 để giữ lại span màu xanh
+                            const elements = text.split('Kim – Mộc – Thủy – Hỏa – Thổ');
+                            if (elements.length === 2) {
+                                el.innerHTML = `${elements[0]}<span class="text-green-700 font-bold">Kim – Mộc – Thủy – Hỏa – Thổ</span>${elements[1]}`;
+                            } else {
+                                el.textContent = text;
+                            }
+                        } else {
+                            el.textContent = text;
+                        }
+                    }
+                }
+            });
+        }
+
+        // --- 5. JavaScript cho giao diện (Đã có sẵn) ---
+        const navbar = document.getElementById('navbar');
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const navLinks = document.querySelectorAll('.nav-link, .mobile-nav-link');
+        const heroSection = document.getElementById('hero-section');
+
+        // Xử lý Menu Mobile (Ẩn/Hiện)
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Đóng menu mobile khi click vào link
+        document.querySelectorAll('.mobile-nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // Xử lý Cuộn Mượt (Smooth Scroll)
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    const offset = navbar.offsetHeight;
+                    const targetPosition = targetElement.offsetTop - offset;
+
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Xử lý Hiệu ứng Parallax (Điều chỉnh vị trí background khi cuộn)
+        window.addEventListener('scroll', function() {
+            // Thay đổi màu navbar khi cuộn qua hero section
+            if (window.scrollY > heroSection.offsetHeight * 0.7) {
+                 navbar.classList.remove('bg-white/95');
+                 navbar.classList.add('bg-white');
+            } else {
+                 navbar.classList.add('bg-white/95');
+                 navbar.classList.remove('bg-white');
+            }
+
+            // Hiệu ứng Parallax (đơn giản)
+            const scrollPosition = window.scrollY;
+            heroSection.style.backgroundPositionY = `${scrollPosition * 0.2}px`;
+        });
+        
+        // --- 6. Khởi Tạo Ngôn Ngữ ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Lấy ngôn ngữ đã lưu, nếu không có thì mặc định là Tiếng Việt
+            const savedLang = localStorage.getItem('lang') || 'vi';
+            setLanguage(savedLang);
+        });
+    </script>
+</body>
+</html>
