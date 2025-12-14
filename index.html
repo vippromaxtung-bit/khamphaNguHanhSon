@@ -802,7 +802,7 @@
         };
 
         // --- 2. Hỗ trợ LLM - Xử lý API Call với Exponential Backoff ---
-        const apiKey = "AIzaSyAooVuGGpdL427hDjVRYK9OUBG4uszcDUY"; // API key được cung cấp bởi môi trường runtime
+        const apiKey = "AIzaSyCOPtB6RukTWpFDwijAXDB_mN7beXunNmY"; // API key được cung cấp bởi môi trường runtime
         const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
 
         async function fetchWithBackoff(url, options, maxRetries = 5) {
